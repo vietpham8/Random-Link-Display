@@ -4,7 +4,8 @@
       "Read(//mnt/c/Users/user/OneDrive/Desktop/New Bussiness/Alan Pham/Bussiness Launch/fed-rate-tracker/**)",
       "Read(//mnt/c/Users/user/OneDrive/Desktop/New Bussiness/Alan Pham/Bussiness Launch/Card_catalog/**)",
       "Bash(python -m flask run:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

@@ -19,7 +19,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "homepage": "https://github.com/vietpham8/Random-Link-Display",
+  "homepage": "https://random-link.netlify.app/",
   "repository": {
     "type": "git",
     "url": "https://github.com/vietpham8/Random-Link-Display.git"

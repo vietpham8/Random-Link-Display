@@ -80,8 +80,8 @@ No environment variables needed - pure client-side application.
 ## 📱 Testing Your Deployed Site
 
 ### Production URL:
-After deployment, Netlify will provide a URL like:
-`https://amazing-name-123456.netlify.app`
+Your site is deployed at:
+**🌐 https://random-link.netlify.app/**
 
 ### Test Checklist:
 - [ ] Site loads properly
@@ -208,3 +208,16 @@ After deployment, your site will have:
 - ✅ **Zero maintenance** costs
 
 Your Random Link Display is now ready for production use! 🎉
+
+## 🌟 Live Site Information
+
+- **Production URL**: https://random-link.netlify.app/
+- **GitHub Repository**: https://github.com/vietpham8/Random-Link-Display
+- **Deployment Status**: ✅ Live and Running
+- **Last Updated**: Auto-deployed from GitHub main branch
+
+### Quick Access Links:
+- 🌐 **Visit Site**: [random-link.netlify.app](https://random-link.netlify.app/)
+- 📱 **Mobile Version**: Responsive design works on all devices
+- ⚡ **Performance**: Global CDN with < 1s load times
+- 🔒 **Security**: HTTPS enabled with security headers

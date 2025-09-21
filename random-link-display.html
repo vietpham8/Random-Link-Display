@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Link Display - Catalogue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Catalogue selector */
+        .catalogue-selector {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 60%;
+        }
+
+        .catalogue-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 14px;
+        }
+
+        .catalogue-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .catalogue-btn:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+            transform: translateY(-2px);
+        }
+
+        /* Current catalogue indicator */
+        .catalogue-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Link items */
+        .link-item {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transform-origin: center;
+        }
+
+        .link-item:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .link-description {
+            display: block;
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .link-catalogue {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+
+        /* Admin panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .admin-panel h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+            width: auto;
+            margin: 0 5px 5px 0;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+        }
+
+        /* Lists */
+        .item-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .catalogue-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .click-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .link-item {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .admin-panel {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .catalogue-selector {
+                max-width: 50%;
+            }
+
+            .catalogue-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(1deg); }
+            50% { transform: translateY(0px) rotate(-1deg); }
+            75% { transform: translateY(-5px) rotate(0.5deg); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Empty state */
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-btn" onclick="showAdmin()">Quản lý</button>
+        <button class="nav-btn" onclick="randomizePositions()">Xáo trộn</button>
+    </div>
+
+    <!-- Catalogue selector -->
+    <div class="catalogue-selector" id="catalogueSelector">
+        <!-- Catalogue buttons will be dynamically added here -->
+    </div>
+
+    <!-- Current catalogue indicator -->
+    <div class="catalogue-indicator" id="catalogueIndicator">
+        Tất cả
+    </div>
+
+    <!-- Main container -->
+    <div class="container" id="container">
+        <!-- Links will be dynamically added here -->
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="hideAdmin()"></div>
+
+    <!-- Admin panel -->
+    <div class="admin-panel" id="adminPanel">
+        <h2>Quản lý Catalogue & Link</h2>
+        
+        <!-- Admin tabs -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('links')">Quản lý Link</button>
+            <button class="admin-tab" onclick="switchTab('catalogues')">Quản lý Catalogue</button>
+            <button class="admin-tab" onclick="switchTab('data')">Dữ liệu</button>
+        </div>
+
+        <!-- Links tab -->
+        <div class="tab-content active" id="linksTab">
+            <form id="linkForm">
+                <div class="form-group">
+                    <label for="linkCatalogue">Catalogue:</label>
+                    <select id="linkCatalogue" required>
+                        <!-- Options will be dynamically added -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="linkUrl">URL Link:</label>
+                    <input type="url" id="linkUrl" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="linkDescription">Mô tả:</label>
+                    <textarea id="linkDescription" rows="3" placeholder="Mô tả ngắn về link này" required></textarea>
+                </div>
+                <button type="submit" class="btn">Thêm Link</button>
+            </form>
+
+            <div class="item-list">
+                <h3>Danh sách Link:</h3>
+                <div id="linkListContent"></div>
+            </div>
+        </div>
+
+        <!-- Catalogues tab -->
+        <div class="tab-content" id="cataloguesTab">
+            <form id="catalogueForm">
+                <div class="form-group">
+                    <label for="catalogueName">Tên Catalogue:</label>
+                    <input type="text" id="catalogueName" placeholder="Ví dụ: Công cụ làm việc" required>
+                </div>
+                <div class="form-group">
+                    <label for="catalogueDescription">Mô tả:</label>
+                    <textarea id="catalogueDescription" rows="2" placeholder="Mô tả về chủ đề này" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="catalogueColor">Màu sắc:</label>
+                    <input type="color" id="catalogueColor" value="#667eea">
+                </div>
+                <button type="submit" class="btn">Thêm Catalogue</button>
+            </form>
+
+            <div class="item-list">
+                <h3>Danh sách Catalogue:</h3>
+                <div id="catalogueListContent"></div>
+            </div>
+        </div>
+
+        <!-- Data tab -->
+        <div class="tab-content" id="dataTab">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-success btn-small" onclick="exportData()">Xuất dữ liệu</button>
+                <button type="button" class="btn btn-info btn-small" onclick="importData()">Nhập dữ liệu</button>
+                <button type="button" class="btn btn-danger btn-small" onclick="clearAllData()">Xóa tất cả</button>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
+                <h4>Thống kê:</h4>
+                <p id="statsContent">Đang tải...</p>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="hideAdmin()">Đóng</button>
+    </div>
+
+    <script>
+        let catalogues = [];
+        let links = [];
+        let linkPositions = [];
+        let currentCatalogue = 'all';
+
+        // Load initial data
+        function loadData() {
+            // Initialize catalogues
+            if (catalogues.length === 0) {
+                catalogues = [
+                    {
+                        id: 1,
+                        name: 'Công cụ',
+                        description: 'Các công cụ hữu ích',
+                        color: '#667eea'
+                    },
+                    {
+                        id: 2,
+                        name: 'Giải trí',
+                        description: 'Nội dung giải trí',
+                        color: '#e74c3c'
+                    },
+                    {
+                        id: 3,
+                        name: 'Học tập',
+                        description: 'Tài liệu học tập',
+                        color: '#27ae60'
+                    }
+                ];
+            }
+
+            // Initialize links
+            if (links.length === 0) {
+                links = [
+                    { 
+                        id: 1, 
+                        catalogueId: 1,
+                        url: 'https://google.com', 
+                        description: 'Tìm kiếm Google', 
+                        clicks: 0 
+                    },
+                    { 
+                        id: 2, 
+                        catalogueId: 2,
+                        url: 'https://youtube.com', 
+                        description: 'Xem video YouTube', 
+                        clicks: 0 
+                    },
+                    { 
+                        id: 3, 
+                        catalogueId: 1,
+                        url: 'https://github.com', 
+                        description: 'Repository GitHub', 
+                        clicks: 0 
+                    }
+                ];
+            }
+
+            renderCatalogueSelector();
+            renderLinks();
+            updateAllLists();
+        }
+
+        function renderCatalogueSelector() {
+            const selector = document.getElementById('catalogueSelector');
+            selector.innerHTML = `
+                <button class="catalogue-btn ${currentCatalogue === 'all' ? 'active' : ''}" onclick="switchCatalogue('all')">
+                    Tất cả
+                </button>
+            `;
+
+            catalogues.forEach(catalogue => {
+                selector.innerHTML += `
+                    <button class="catalogue-btn ${currentCatalogue === catalogue.id ? 'active' : ''}" 
+                            onclick="switchCatalogue(${catalogue.id})"
+                            style="background-color: ${currentCatalogue === catalogue.id ? catalogue.color + '80' : 'rgba(255,255,255,0.3)'}">
+                        ${catalogue.name}
+                    </button>
+                `;
+            });
+        }
+
+        function switchCatalogue(catalogueId) {
+            currentCatalogue = catalogueId;
+            renderCatalogueSelector();
+            renderLinks();
+            updateCatalogueIndicator();
+        }
+
+        function updateCatalogueIndicator() {
+            const indicator = document.getElementById('catalogueIndicator');
+            if (currentCatalogue === 'all') {
+                indicator.textContent = 'Tất cả';
+                indicator.style.background = 'rgba(255, 255, 255, 0.9)';
+            } else {
+                const catalogue = catalogues.find(c => c.id === currentCatalogue);
+                if (catalogue) {
+                    indicator.textContent = catalogue.name;
+                    indicator.style.background = catalogue.color + '90';
+                    indicator.style.color = 'white';
+                }
+            }
+        }
+
+        function getFilteredLinks() {
+            if (currentCatalogue === 'all') {
+                return links;
+            }
+            return links.filter(link => link.catalogueId === currentCatalogue);
+        }
+
+        function renderLinks() {
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+            linkPositions = [];
+
+            const filteredLinks = getFilteredLinks();
+
+            if (filteredLinks.length === 0) {
+                const catalogueName = currentCatalogue === 'all' ? 'này' : 
+                    catalogues.find(c => c.id === currentCatalogue)?.name || 'này';
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Chưa có link nào trong catalogue ${catalogueName}</h3>
+                        <p>Hãy thêm link mới trong trang quản lý</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredLinks.forEach((link, index) => {
+                const catalogue = catalogues.find(c => c.id === link.catalogueId);
+                const linkElement = document.createElement('a');
+                linkElement.className = 'link-item floating';
+                linkElement.href = link.url;
+                linkElement.target = '_blank';
+                linkElement.innerHTML = `
+                    <strong>${link.description}</strong>
+                    <span class="link-description">${link.url}</span>
+                    <span class="link-catalogue" style="background: ${catalogue?.color || '#667eea'}">
+                        ${catalogue?.name || 'Không xác định'}
+                    </span>
+                `;
+
+                // Calculate size based on clicks
+                const baseSize = 1;
+                const sizeMultiplier = 1 + (link.clicks * 0.1);
+                const finalSize = Math.min(baseSize * sizeMultiplier, 3);
+
+                linkElement.style.fontSize = `${finalSize}em`;
+                linkElement.style.transform = `scale(${Math.min(finalSize, 2)})`;
+
+                // Add click handler
+                linkElement.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    incrementClick(link.id);
+                    window.open(link.url, '_blank');
+                });
+
+                container.appendChild(linkElement);
+                setRandomPosition(linkElement, index);
+            });
+
+            setTimeout(randomizePositions, 3000);
+        }
+
+        function setRandomPosition(element, index) {
+            const container = document.getElementById('container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            const elementWidth = element.offsetWidth || 200;
+            const elementHeight = element.offsetHeight || 80;
+
+            let x, y;
+            let attempts = 0;
+            const maxAttempts = 50;
+
+            do {
+                x = Math.random() * (containerWidth - elementWidth - 100) + 50;
+                y = Math.random() * (containerHeight - elementHeight - 150) + 100;
+                attempts++;
+            } while (isOverlapping(x, y, elementWidth, elementHeight) && attempts < maxAttempts);
+
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+
+            linkPositions[index] = { x, y, width: elementWidth, height: elementHeight };
+        }
+
+        function isOverlapping(x, y, width, height) {
+            for (let pos of linkPositions) {
+                if (!pos) continue;
+                
+                if (x < pos.x + pos.width + 20 &&
+                    x + width + 20 > pos.x &&
+                    y < pos.y + pos.height + 20 &&
+                    y + height + 20 > pos.y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function randomizePositions() {
+            linkPositions = [];
+            const linkElements = document.querySelectorAll('.link-item');
+            linkElements.forEach((element, index) => {
+                setRandomPosition(element, index);
+                element.style.transition = 'all 1s ease-in-out';
+            });
+            
+            setTimeout(randomizePositions, 8000 + Math.random() * 4000);
+        }
+
+        function incrementClick(linkId) {
+            const link = links.find(l => l.id === linkId);
+            if (link) {
+                link.clicks++;
+                renderLinks();
+                updateLinkList();
+                updateStats();
+            }
+        }
+
+        // Admin functions
+        function showAdmin() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'block';
+            updateAllLists();
+            updateStats();
+        }
+
+        function hideAdmin() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function addCatalogue(name, description, color) {
+            const newId = Math.max(...catalogues.map(c => c.id), 0) + 1;
+            catalogues.push({
+                id: newId,
+                name: name,
+                description: description,
+                color: color
+            });
+            renderCatalogueSelector();
+            updateAllLists();
+        }
+
+        function deleteCatalogue(catalogueId) {
+            const linksInCatalogue = links.filter(l => l.catalogueId === catalogueId).length;
+            if (linksInCatalogue > 0) {
+                if (!confirm(`Catalogue này có ${linksInCatalogue} link. Xóa catalogue sẽ xóa tất cả link bên trong. Bạn có chắc?`)) {
+                    return;
+                }
+                links = links.filter(l => l.catalogueId !== catalogueId);
+            }
+            
+            catalogues = catalogues.filter(c => c.id !== catalogueId);
+            
+            if (currentCatalogue === catalogueId) {
+                currentCatalogue = 'all';
+            }
+            
+            renderCatalogueSelector();
+            renderLinks();
+            updateAllLists();
+        }
+
+        function addLink(catalogueId, url, description) {
+            const newId = Math.max(...links.map(l => l.id), 0) + 1;
+            links.push({
+                id: newId,
+                catalogueId: parseInt(catalogueId),
+                url: url,
+                description: description,
+                clicks: 0
+            });
+            renderLinks();
+            updateLinkList();
+        }
+
+        function deleteLink(linkId) {
+            if (confirm('Bạn có chắc muốn xóa link này?')) {
+                links = links.filter(l => l.id !== linkId);
+                renderLinks();
+                updateLinkList();
+            }
+        }
+
+        function updateAllLists() {
+            updateCatalogueList();
+            updateLinkList();
+            updateCatalogueSelect();
+        }
+
+        function updateCatalogueSelect() {
+            const select = document.getElementById('linkCatalogue');
+            select.innerHTML = '';
+            
+            catalogues.forEach(catalogue => {
+                const option = document.createElement('option');
+                option.value = catalogue.id;
+                option.textContent = catalogue.name;
+                select.appendChild(option);
+            });
+        }
+
+        function updateCatalogueList() {
+            const listContent = document.getElementById('catalogueListContent');
+            if (catalogues.length === 0) {
+                listContent.innerHTML = '<p>Chưa có catalogue nào.</p>';
+                return;
+            }
+
+            listContent.innerHTML = catalogues.map(catalogue => {
+                const linkCount = links.filter(l => l.catalogueId === catalogue.id).length;
+                return `
+                    <div class="list-item">
+                        <div class="item-info">
+                            <span class="catalogue-color" style="background: ${catalogue.color}"></span>
+                            <strong>${catalogue.name}</strong><br>
+                            <small>${catalogue.description} (${linkCount} link)</small>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="delete-btn" onclick="deleteCatalogue(${catalogue.id})">Xóa</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateLinkList() {
+            const listContent = document.getElementById('linkListContent');
+            if (links.length === 0) {
+                listContent.innerHTML = '<p>Chưa có link nào.</p>';
+                return;
+            }
+
+            const sortedLinks = [...links].sort((a, b) => b.clicks - a.clicks);
+
+            listContent.innerHTML = sortedLinks.map(link => {
+                const catalogue = catalogues.find(c => c.id === link.catalogueId);
+                return `
+                    <div class="list-item">
+                        <div class="item-info">
+                            <span class="catalogue-color" style="background: ${catalogue?.color || '#667eea'}"></span>
+                            <strong>${link.description}</strong><br>
+                            <small>${link.url}</small><br>
+                            <small style="color: #667eea;">${catalogue?.name || 'Không xác định'}</small>
+                        </div>
+                        <span class="click-count">${link.clicks} clicks</span>
+                        <div class="action-buttons">
+                            <button class="delete-btn" onclick="deleteLink(${link.id})">Xóa</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalCatalogues = catalogues.length;
+            const totalLinks = links.length;
+            const totalClicks = links.reduce((sum, link) => sum + link.clicks, 0);
+            const mostClickedLink = links.reduce((max, link) => link.clicks > max.clicks ? link : max, {clicks: 0});
+
+            document.getElementById('statsContent').innerHTML = `
+                <p><strong>Tổng catalogue:</strong> ${totalCatalogues}</p>
+                <p><strong>Tổng link:</strong> ${totalLinks}</p>
+                <p><strong>Tổng lượt click:</strong> ${totalClicks}</p>
+                <p><strong>Link được click nhiều nhất:</strong> ${mostClickedLink.description || 'Chưa có'} (${mostClickedLink.clicks} clicks)</p>
+            `;
+        }
+
+        // Data management
+        function exportData() {
+            const data = { catalogues, links };
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'catalogues-and-links-data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            if (importedData.catalogues && importedData.links && 
+                                Array.isArray(importedData.catalogues) && 
+                                Array.isArray(importedData.links)) {
+                                catalogues = importedData.catalogues;
+                                links = importedData.links;
+                                currentCatalogue = 'all';
+                                renderCatalogueSelector();
+                                renderLinks();
+                                updateAllLists();
+                                updateStats();
+                                alert('Dữ liệu đã được import thành công!');
+                            } else {
+                                alert('File không đúng định dạng!');
+                            }
+                        } catch (error) {
+                            alert('Lỗi khi đọc file: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function clearAllData() {
+            if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ catalogue và link. Bạn có chắc chắn?')) {
+                if (confirm('Lần xác nhận cuối: Tất cả dữ liệu sẽ bị mất vĩnh viễn!')) {
+                    catalogues = [];
+                    links = [];
+                    currentCatalogue = 'all';
+                    renderCatalogueSelector();
+                    renderLinks();
+                    updateAllLists();
+                    updateStats();
+                    alert('Đã xóa tất cả dữ liệu!');
+                }
+            }
+        }
+
+        // Form submissions
+        document.getElementById('catalogueForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('catalogueName').value.trim();
+            const description = document.getElementById('catalogueDescription').value.trim();
+            const color = document.getElementById('catalogueColor').value;
+            
+            if (name && description) {
+                // Check for duplicate names
+                if (catalogues.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                    alert('Tên catalogue đã tồn tại!');
+                    return;
+                }
+                
+                addCatalogue(name, description, color);
+                document.getElementById('catalogueName').value = '';
+                document.getElementById('catalogueDescription').value = '';
+                document.getElementById('catalogueColor').value = '#667eea';
+                alert('Thêm catalogue thành công!');
+            }
+        });
+
+        document.getElementById('linkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const catalogueId = document.getElementById('linkCatalogue').value;
+            const url = document.getElementById('linkUrl').value.trim();
+            const description = document.getElementById('linkDescription').value.trim();
+            
+            if (catalogueId && url && description) {
+                // Check for duplicate URLs
+                if (links.some(l => l.url.toLowerCase() === url.toLowerCase())) {
+                    alert('URL này đã tồn tại!');
+                    return;
+                }
+                
+                addLink(catalogueId, url, description);
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('linkDescription').value = '';
+                alert('Thêm link thành công!');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            setTimeout(renderLinks, 100);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close admin panel
+            if (e.key === 'Escape') {
+                hideAdmin();
+            }
+            // Ctrl + M to open admin panel
+            if (e.ctrlKey && e.key === 'm') {
+                e.preventDefault();
+                showAdmin();
+            }
+            // Space to randomize positions
+            if (e.key === ' ' && !document.getElementById('adminPanel').style.display.includes('block')) {
+                e.preventDefault();
+                randomizePositions();
+            }
+        });
+
+        // Auto-save reminder (since we can't use localStorage)
+        setInterval(function() {
+            if (links.length > 3 || catalogues.length > 3) {
+                console.log('💾 Nhắc nhở: Hãy xuất dữ liệu thường xuyên để không mất dữ liệu khi refresh trang!');
+            }
+        }, 300000); // Every 5 minutes
+
+        // Initialize
+        loadData();
+        updateCatalogueIndicator();
+    </script>
+</body>
+</html>

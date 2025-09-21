@@ -1,0 +1,30 @@
+{
+  "name": "random-link-catalog",
+  "version": "2.0.0",
+  "description": "Vietnamese link catalog manager - Static site for Netlify",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve .",
+    "build": "echo 'Static site - no build required'",
+    "serve": "python -m http.server 8000",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": ["links", "catalog", "bookmark", "vietnamese", "static", "netlify", "spa"],
+  "author": "Alan Pham",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "homepage": "https://github.com/vietpham8/Random-Link-Display",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vietpham8/Random-Link-Display.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vietpham8/Random-Link-Display/issues"
+  }
+}

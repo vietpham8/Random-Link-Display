@@ -645,17 +645,46 @@
             initializeDefaultData() {
                 if (this.catalogues.length === 0) {
                     const defaultCatalogues = [
-                        { id: 1, name: 'Công cụ', description: 'Các công cụ hữu ích', color: '#667eea', created_at: new Date().toISOString() },
-                        { id: 2, name: 'Giải trí', description: 'Nội dung giải trí', color: '#e74c3c', created_at: new Date().toISOString() },
-                        { id: 3, name: 'Học tập', description: 'Tài liệu học tập', color: '#27ae60', created_at: new Date().toISOString() }
+                        { id: 4, name: 'AI', description: 'Công cụ AI', color: '#66ea7c', created_at: '2025-09-18 16:28:03' },
+                        { id: 5, name: 'Project', description: 'Các dự án của tôi', color: '#66eadb', created_at: '2025-09-18 16:30:00' },
+                        { id: 6, name: 'News', description: 'Tin tức', color: '#eace66', created_at: '2025-09-18 16:34:06' },
+                        { id: 7, name: 'Products', description: 'Sản phẩm', color: '#ea66a0', created_at: '2025-09-18 16:41:39' },
+                        { id: 8, name: 'My links', description: 'Các link của tôi', color: '#7815ac', created_at: '2025-09-18 16:45:15' },
+                        { id: 9, name: 'Client', description: 'website của đối tác làm việc cùng', color: '#2bd709', created_at: '2025-09-19 08:45:04' },
+                        { id: 10, name: 'Tools', description: 'Công cụ online', color: '#14c9e1', created_at: '2025-09-20 15:06:40' }
                     ];
                     this.catalogues = defaultCatalogues;
                     this.saveCatalogues();
 
                     const defaultLinks = [
-                        { id: 1, catalogue_id: 1, url: 'https://google.com', description: 'Tìm kiếm Google', clicks: 0, created_at: new Date().toISOString() },
-                        { id: 2, catalogue_id: 2, url: 'https://youtube.com', description: 'Xem video YouTube', clicks: 0, created_at: new Date().toISOString() },
-                        { id: 3, catalogue_id: 1, url: 'https://github.com', description: 'Repository GitHub', clicks: 0, created_at: new Date().toISOString() }
+                        { id: 4, catalogue_id: 4, url: 'https://www.perplexity.ai/', description: 'perplexity', clicks: 0, created_at: '2025-09-18 16:30:41' },
+                        { id: 5, catalogue_id: 4, url: 'https://claude.ai/chat', description: 'claude', clicks: 1, created_at: '2025-09-18 16:31:02' },
+                        { id: 6, catalogue_id: 5, url: 'https://alan-research-hub.netlify.app/', description: 'alan research hub', clicks: 1, created_at: '2025-09-18 16:32:05' },
+                        { id: 7, catalogue_id: 6, url: 'https://bongdaplus.vn/', description: 'bongdaplus', clicks: 4, created_at: '2025-09-18 16:34:28' },
+                        { id: 8, catalogue_id: 6, url: 'https://tinhte.vn/', description: 'tinhte', clicks: 2, created_at: '2025-09-18 16:34:43' },
+                        { id: 9, catalogue_id: 5, url: 'https://viet.zone/', description: 'vietzone', clicks: 3, created_at: '2025-09-18 16:35:34' },
+                        { id: 10, catalogue_id: 6, url: 'https://www.youtube.com/', description: 'youtube', clicks: 2, created_at: '2025-09-18 16:37:52' },
+                        { id: 11, catalogue_id: 4, url: 'https://chat.openai.com/chat', description: 'chatgpt', clicks: 0, created_at: '2025-09-18 16:38:59' },
+                        { id: 12, catalogue_id: 4, url: 'https://gemini.google.com/', description: 'gemini', clicks: 1, created_at: '2025-09-18 16:39:15' },
+                        { id: 13, catalogue_id: 7, url: 'https://viet.zone/seafood-knives', description: 'Dao thủy sản', clicks: 0, created_at: '2025-09-18 16:41:53' },
+                        { id: 14, catalogue_id: 7, url: 'https://viet.zone/basa-bladder', description: 'Bóng cá tra', clicks: 0, created_at: '2025-09-18 16:42:43' },
+                        { id: 15, catalogue_id: 7, url: 'https://viet.zone/inspection', description: 'Kiểm hàng thủy sản', clicks: 1, created_at: '2025-09-18 16:43:11' },
+                        { id: 16, catalogue_id: 7, url: 'https://viet.zone/saba-portion', description: 'Saba portion', clicks: 0, created_at: '2025-09-18 16:43:40' },
+                        { id: 17, catalogue_id: 7, url: 'https://viet.zone/shrimp', description: 'Tôm', clicks: 0, created_at: '2025-09-18 16:44:01' },
+                        { id: 18, catalogue_id: 8, url: 'https://www.facebook.com/profile.php?id=61559353173759', description: 'facebook', clicks: 0, created_at: '2025-09-18 16:45:33' },
+                        { id: 19, catalogue_id: 8, url: 'https://danhngay.com', description: 'sbo', clicks: 0, created_at: '2025-09-19 08:44:03' },
+                        { id: 20, catalogue_id: 9, url: 'https://trangthuyseafood.vn/', description: 'Trang Thuỷ', clicks: 0, created_at: '2025-09-19 08:45:48' },
+                        { id: 21, catalogue_id: 9, url: 'https://hoathangseafood.vn/', description: 'Hoà Thắng', clicks: 0, created_at: '2025-09-19 08:46:33' },
+                        { id: 22, catalogue_id: 4, url: 'https://copilot.microsoft.com/', description: 'copilot', clicks: 0, created_at: '2025-09-19 08:47:52' },
+                        { id: 23, catalogue_id: 4, url: 'https://yescribe.ai/vi', description: 'Lấy textscript youtube', clicks: 0, created_at: '2025-09-19 08:49:20' },
+                        { id: 24, catalogue_id: 4, url: 'https://www.genspark.ai/', description: 'genspark', clicks: 0, created_at: '2025-09-19 12:57:26' },
+                        { id: 25, catalogue_id: 4, url: 'https://agent.minimax.io/', description: 'minimax', clicks: 0, created_at: '2025-09-19 12:58:32' },
+                        { id: 26, catalogue_id: 5, url: 'https://gramps-web-xgvk.onrender.com/', description: 'Quản lý phả hệ', clicks: 0, created_at: '2025-09-19 13:01:54' },
+                        { id: 27, catalogue_id: 5, url: 'https://github.com/', description: 'github', clicks: 0, created_at: '2025-09-19 13:03:06' },
+                        { id: 28, catalogue_id: 5, url: 'https://baccarat-hk.onrender.com/', description: 'baccarat tool', clicks: 0, created_at: '2025-09-19 13:04:22' },
+                        { id: 29, catalogue_id: 6, url: 'https://dantri.com.vn/', description: 'dantri', clicks: 0, created_at: '2025-09-19 15:46:19' },
+                        { id: 30, catalogue_id: 6, url: 'https://vnexpress.net/', description: 'vnexpress', clicks: 2, created_at: '2025-09-19 15:46:44' },
+                        { id: 31, catalogue_id: 10, url: 'https://m.vuiz.net/', description: 'Tải nhạc', clicks: 0, created_at: '2025-09-20 15:07:05' }
                     ];
                     this.links = defaultLinks;
                     this.saveLinks();
